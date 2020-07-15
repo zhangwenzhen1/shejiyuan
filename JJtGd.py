@@ -1,8 +1,6 @@
 # encoding=utf-8
-import pandas as pd
 import datetime
 from Postgresql import *
-
 class JJtGd(object):
     def __init__(self, url, filename):
         self.url = url
@@ -87,12 +85,12 @@ class JJtGd(object):
             df['vccquestiontype'] = 'VoLTE下行高吞字小区-19'
             df['vcequestiontype'] = 'VOLTEXXGTZ'
             df['下行高吞字采样点占比'] = df['下行高吞字采样点占比'].apply(lambda x: format(x, '.2%'))
-            df['vcproblemtarget1'] = "[下行高吞字率]:" + df['下行高吞字采样点占比'] + "[下行丢包率采样点点数]:" +\
+            df['vcproblemtarget1'] = "[下行高吞字率]:" + df['下行高吞字采样点占比'] + "[下行丢包率采样点点数]:" + \
                                      df['下行总采样点数'].map(str)
             print("下行高呑子指标获取成功")
-        df = df[['日期','vccquestiontype', 'vcequestiontype', 'CGI', 'vcproblemtarget1', 'vcauxiliarypointer4']]
-        if df.iloc[:, 0].size >=1:
-            aa,bb = self.GetDate(df)
+        df = df[['日期', 'vccquestiontype', 'vcequestiontype', 'CGI', 'vcproblemtarget1', 'vcauxiliarypointer4']]
+        if df.iloc[:, 0].size >= 1:
+            aa, bb = self.GetDate(df)
             df['starttime'] = bb
             df['endtime'] = aa
         df.drop(['日期'], axis=1, inplace=True)
@@ -110,22 +108,22 @@ class JJtGd(object):
         bb = a['日期'].min()
         return aa, bb
 
-    def GetMaxSuoyin(self,sql):
-
-        a = Postgresql(database="db", user='postgres_user', password='postgres_password',host='10.10.10.109',
-                            port='5432')
-        b = a.GetData(sql)
-        return b
-
-    def Go(self,sheetname):
+    def Go(self, sheetname):
         df, sheetname = self.ReadFile(sheetname)
         df = self.GetWorstCellKpi(df, sheetname)
         return df
 
-
-
-
-# sql = "SELECT max(cast(replace(vcauxiliarypointer6,'JT','') as bigint)) as suoyin FROM volte.v_volte_send where vcauxiliarypointer6 like 'JT%' "
-# b = a.GetMaxSuoyin(sql)
-# print(b[0][0])
+    def Run(self):
+        df_VOLTEJTD = self.Go('低接入小区明细参考表')
+        df_VOLTERABDXG = self.Go('高掉话小区明细参考表')
+        df_ESRVCCQHC = self.Go('低SRVCC无线切换成功率小区明细参考表')
+        df_VOLTESXGDB = self.Go('上行高丢包小区明细参考表')
+        df_VOLTEXXGDB = self.Go('下行高丢包小区明细参考表')
+        df_VOLTESXGTZ = self.Go('上行高吞字小区明细参考表')
+        df_VOLTEXXGTZ = self.Go('下行高吞字小区明细参考表')
+        df = df_VOLTEJTD.append(df_VOLTERABDXG).append(df_ESRVCCQHC).append(df_VOLTESXGDB).append(df_VOLTEXXGDB).append(
+            df_VOLTESXGTZ).append(df_VOLTEXXGTZ)
+        df = df.reset_index(drop=False)
+        df.drop(['index'], axis=1, inplace=True)
+        return df
 

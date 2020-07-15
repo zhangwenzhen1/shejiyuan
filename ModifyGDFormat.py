@@ -3,7 +3,6 @@ from Postgresql import *
 import time
 import pandas as pd
 import numpy as np
-
 class ModifyGDFormat(object):
     def __init__(self, df):
         self.df = df
@@ -84,8 +83,8 @@ class ModifyGDFormat(object):
         print('派单表数据入库成功')
         a.dateIntoPostgresql(v_return, 'volte.v_volte_returnvaluation_2019111219')
         print("回单表数据入库成功")
-        a.dateIntoPostgresql(df_all,'volte.vn_volte_gdsend_jt')
-        print("集团所有工单数据入库成功")
+        # a.dateIntoPostgresql(df_all,'volte.vn_volte_gdsend_jt')
+        # print("集团所有工单数据入库成功")
         a.finish()
         return send, v_return, df_all
 

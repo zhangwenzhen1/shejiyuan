@@ -1,28 +1,13 @@
 # encoding=utf-8
 from ModifyGDFormat import *
 from JJtGd import *
-import pandas as pd
 import warnings
-
 warnings.filterwarnings('ignore')
 path = r'D:/集团工单/gd'  # 指定存放文件的地址
-# filename = input("请输入您要读取的文件名：")
-filename = '两低两高小区问题跟踪表20200401.xlsx'
-
+filename = input("请输入您要读取的文件名：")
+# filename = '两低两高小区问题跟踪表20200501.xlsx'
 a = JJtGd(path, filename)
-df_VOLTEJTD = a.Go('低接入小区明细参考表')
-df_VOLTERABDXG = a.Go('高掉话小区明细参考表')
-df_ESRVCCQHC = a.Go('低SRVCC无线切换成功率小区明细参考表')
-df_VOLTESXGDB = a.Go('上行高丢包小区明细参考表')
-df_VOLTEXXGDB = a.Go('下行高丢包小区明细参考表')
-df_VOLTESXGTZ = a.Go('上行高吞字小区明细参考表')
-df_VOLTEXXGTZ = a.Go('下行高吞字小区明细参考表')
-
-df = df_VOLTEJTD.append(df_VOLTERABDXG).append(df_ESRVCCQHC).append(df_VOLTESXGDB).append(df_VOLTEXXGDB) \
-    .append(df_VOLTESXGTZ).append(df_VOLTEXXGTZ)
-df = df.reset_index(drop=False)
-df.drop(['index'], axis=1, inplace=True)
-# df = pd.read_csv('D:/集团工单/gd/paidan.csv',encoding='gbk')
+df = a.Run()
 task = ModifyGDFormat(df)
 send, v_return, df_all = task.Run()
 print("集团下发派单数:{}".format(str(df_all.iloc[:, 0].size)))
