@@ -93,7 +93,7 @@ class JJtGd(object):
             aa, bb = self.GetDate(df)
             df['starttime'] = bb
             df['endtime'] = aa
-        df.drop(['日期'], axis=1, inplace=True)
+        # df.drop(['日期'], axis=1, inplace=True)
         return df
 
     def GetDate(self, a):

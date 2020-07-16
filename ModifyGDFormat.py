@@ -79,12 +79,12 @@ class ModifyGDFormat(object):
         suoying = suoying[0][0]
         df, df_all = self.chooseState(eptable)
         send, v_return = self.SendTable(df, suoying)
-        a.dateIntoPostgresql(send, 'volte.v_volte_send_20191113')
+        a.dateIntoPostgresql(send, 'volte.v_volte_send')
         print('派单表数据入库成功')
-        a.dateIntoPostgresql(v_return, 'volte.v_volte_returnvaluation_2019111219')
+        a.dateIntoPostgresql(v_return, 'volte.v_volte_returnvaluation')
         print("回单表数据入库成功")
-        # a.dateIntoPostgresql(df_all,'volte.vn_volte_gdsend_jt')
-        # print("集团所有工单数据入库成功")
+        a.dateIntoPostgresql(df_all,'volte.vn_volte_gdsend_jt')
+        print("集团所有工单数据入库成功")
         a.finish()
         return send, v_return, df_all
 
