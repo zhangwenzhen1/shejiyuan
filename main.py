@@ -81,7 +81,6 @@ def main():
     ff = Postgresql()
     ff.dateIntoPostgresql(result, "volte.vn_gdcellkpi_group")
     print("反馈表数据入库完成")
-    ff = Postgresql()
     ff.dateIntoPostgresql(f_date, "volte.vn_gd_group_date")
     ff.finish()
     print("反馈指标日期入库完成")
