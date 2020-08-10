@@ -20,6 +20,9 @@ ss_res = np.sum(res_ydata ** 2)
 ss_tot = np.sum((ydata - np.mean(ydata)) ** 2)
 r_squared = 1 - (ss_res / ss_tot)
 
-### Output results ###
+###Output results ###
 print("a = %f  b = %f   R2 = %f" % (popt[0], popt[1], r_squared))
+
+
+
 
