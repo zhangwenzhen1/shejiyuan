@@ -48,6 +48,14 @@ class Postgresql(object):
         cur = conn.cursor()
         cur.execute(sql)
         date = cur.fetchall()
+        date = pd.DataFrame(date)
+        cols = cur.description
+        # 将数据truple转换为DataFrame
+        col = []
+        for i in cols:
+            col.append(i[0])
+        # print(col)
+        date.columns = col
         cur.close()
         return date
 
@@ -57,12 +65,13 @@ class Postgresql(object):
 
 if __name__ == "__main__":
     a = Postgresql()
-    sql = "SELECT cgi,state,cityname,districtandcounty,vendor FROM volte.v_eptable"
-    sql1 = "SELECT max(cast(replace(vcauxiliarypointer6,'JT','') as bigint)) as suoyin FROM volte.v_volte_send where vcauxiliarypointer6 like 'JT%' "
-    eptable = a.GetData(sql)
-    suoying = a.GetData(sql1)
-    eptable = pd.DataFrame(eptable)
+    # df = pd.read_csv('D:\集团工单/back.csv', encoding='gbk')
+    # df1=pd.read_csv('D:\集团工单/riqi1.csv', encoding='gbk')
+    # # a.dateIntoPostgresql(df, "volte.vn_gdcellkpi_group")
+    # a.dateIntoPostgresql(df1, "volte.vn_gd_group_date")
+    sql ="SELECT * from volte.userinfor where s_date <'2020-06-11 00:00:00' "
+    date = a.GetData(sql)
+    # date = pd.DataFrame(date)
+    print(date.iloc[:, 0].size)
+    date.to_csv('D:\集团工单/volte.userinfor.csv', index= False,encoding='utf-8')
     a.finish()
-    print(eptable.head())
-
-    print(suoying)
