@@ -6,7 +6,6 @@ import numpy as np
 class ModifyGDFormat(object):
     def __init__(self, df):
         self.df = df
-
     def chooseState(self, eptable):
         """
         筛选现网有业务工单
@@ -70,13 +69,14 @@ class ModifyGDFormat(object):
         ##获取工参
         sql = "SELECT cgi,state,cityname,districtandcounty,vendor FROM volte.v_eptable"
         eptable = a.GetData(sql)
-        eptable = pd.DataFrame(eptable)
+        # eptable = pd.DataFrame(eptable)
         eptable.columns = ['CGI', 'state', 'vcauxiliarypointer1', 'vcauxiliarypointer2', 'vcauxiliarypointer3']
         eptable = eptable.drop_duplicates('CGI')
         ##获取上次派单最大编号
         sql1 = "SELECT max(cast(replace(vcauxiliarypointer6,'JT','') as bigint)) as suoyin FROM volte.v_volte_send where vcauxiliarypointer6 like 'JT%' "
         suoying = a.GetData(sql1)
-        suoying = suoying[0][0]
+        # suoying = suoying[0][0]
+        suoying = suoying.iat[0, 0]
         df, df_all = self.chooseState(eptable)
         send, v_return = self.SendTable(df, suoying)
         a.dateIntoPostgresql(send, 'volte.v_volte_send')
@@ -87,7 +87,6 @@ class ModifyGDFormat(object):
         print("集团所有工单数据入库成功")
         a.finish()
         return send, v_return, df_all
-
 
 if __name__ == "__main__":
     df = pd.read_csv('D:/集团工单/gd/paidan.csv', encoding='gbk')
