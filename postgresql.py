@@ -13,11 +13,11 @@ class Postgresql(object):
         :param host: 地址
         :param port: 端口
         '''
-        self.database = 'db'
-        self.user = 'postgres_user'
-        self.password = 'postgres_password'
-        self.host = '10.10.10.109'
-        self.port = '5432'
+        self.database = '**'
+        self.user = '**'
+        self.password = '**'
+        self.host = '**'
+        self.port = '**'
         self.conn = psycopg2.connect(database=self.database, user=self.user, password=self.password, host=self.host,
                                      port=self.port)
 
@@ -69,9 +69,18 @@ if __name__ == "__main__":
     # df1=pd.read_csv('D:\集团工单/riqi1.csv', encoding='gbk')
     # # a.dateIntoPostgresql(df, "volte.vn_gdcellkpi_group")
     # a.dateIntoPostgresql(df1, "volte.vn_gd_group_date")
-    sql ="SELECT * from volte.userinfor where s_date <'2020-06-11 00:00:00' "
-    date = a.GetData(sql)
+    # sql ="SELECT * from volte.userinfor where s_date <'2020-06-11 00:00:00' "
+    # sql = "SELECT cgi,state,cityname,districtandcounty,vendor FROM volte.v_eptable"
+
+    sql1 = "SELECT max(cast(replace(vcauxiliarypointer6,'JT','') as bigint)) as suoyin FROM volte.v_volte_send where vcauxiliarypointer6 like 'JT%' "
+    # sql2 ="SELECT * FROM volte.vn_xdrresultscore xdr LEFT JOIN volte.vn_complain_reason reason ON xdr.request_no = reason.request_no WHERE TO_CHAR(xdr.accept_time, 'yyyy-MM-dd') = '2020-07-27'"
+    date = a.GetData(sql1)
+    
+    print('suoy'+str(date.iat[0,0]))
+    # date = date.drop_duplicates('request_no')
+    # print(date.iloc[:, 0].size)
     # date = pd.DataFrame(date)
-    print(date.iloc[:, 0].size)
-    date.to_csv('D:\集团工单/volte.userinfor.csv', index= False,encoding='utf-8')
+    # date.columns = ['CGI', 'state', 'vcauxiliarypointer1', 'vcauxiliarypointer2', 'vcauxiliarypointer3']
+    # print(date.head())
+    # date.to_csv('D:\集团工单/USETOUSU.csv', index= False,encoding='gbk')
     a.finish()
