@@ -13,11 +13,11 @@ class Postgresql(object):
         :param host: 地址
         :param port: 端口
         '''
-        self.database = 'db'
-        self.user = 'postgres_user'
-        self.password = 'postgres_password'
-        self.host = '10.10.10.109'
-        self.port = '5432'
+        self.database = '**'
+        self.user = '**'
+        self.password = '**'
+        self.host = '**'
+        self.port = '**'
         self.conn = psycopg2.connect(database=self.database, user=self.user, password=self.password, host=self.host,
                                      port=self.port)
 
