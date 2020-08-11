@@ -9,20 +9,20 @@ from io import StringIO
 import datetime
 import numpy as np
 
-###连接数据库
+##连接数据库
 def connectionPosgresql():
     try:
         conn = psycopg2.connect(database="db", user="postgres_user", password="postgres_password", host="10.10.10.109",
                                 port="5432")
         # conn = psycopg2.connect(database="db", user="cmdi_volte", password="Cmdi@2O19", host="192.169.5.142",
-        #                         port="35005")
+        #                         port="5432")
     except Exception as e:
         print(e)
         context = e
         write_csv(context)
     return conn
 
-#######csv数据入postgresql库,参数a为要入的数据，b入库的表名，c入库表的列名
+##csv数据入postgresql库,参数a为要入的数据，b入库的表名
 def dateIntoPostgresql(a, b):
     try:
         col = a.columns
@@ -44,7 +44,7 @@ def dateIntoPostgresql(a, b):
         write_csv(context)
         print('入数报错')
 
-#####连接数据库获取最新工参数据表
+##连接数据库获取最新工参数据表
 def getPublicParameter():
     try:
         conn = connectionPosgresql()
@@ -67,7 +67,7 @@ def getPublicParameter():
 def chooseProvince(a):
     a = a.loc[a['省份'] == '广东']
     return a
-####读写日志
+##读写日志
 def write_csv(context):
     log = r'D:/集团工单/rizhi.csv'
     # log = r'/data/ftp/python/fcsv/log.csv'
@@ -80,11 +80,11 @@ def write_csv(context):
 
 def getFileName(path):
     try:
-        file_name_list = os.listdir(path)  # 返回所有文件名的列表list
+        file_name_list = os.listdir(path)  #返回所有文件名的列表list
         a = pd.DataFrame(file_name_list)
         a.columns = ['文件名']
-        a = a.sort_values(by=['文件名'], ascending=[False])  ##文件名降序排列
-        b = a.iloc[0, 0]  ####获取最新的文件名
+        a = a.sort_values(by=['文件名'], ascending=[False])  #文件名降序排列
+        b = a.iloc[0, 0]  #获取最新的文件名
         context = "获取文件名成功" + b
         write_csv(context)
         print(context)
@@ -93,9 +93,9 @@ def getFileName(path):
         write_csv(context)
     return b
 
-######获取工单生成日期
+##获取工单生成日期
 def getProblemDate(f):
-    ######获取低接通，高掉话，切换差小区工单生成日期
+    ##获取低接通，高掉话，切换差小区工单生成日期
     f['日期'] = pd.to_datetime(f['日期'], format='%Y%m%d')
     aa = f['日期'].max()
     aa = (aa + datetime.timedelta(days=1) - relativedelta(months=+1)).strftime("%Y-%m-%d %H:%M:%S")
@@ -118,7 +118,7 @@ def Get_gddata(date):
 
 def getBackTablekpi(fpath):
     try:
-        ###读取文件
+        ##读取文件
         VOLTEJTD = pd.read_excel(fpath, sheet_name='低接入小区闭环管理反馈表', usecols=['省份', 'CGI', 'VoLTE话务量', 'VoLTE接通率'])
         VOLTERABDXG = pd.read_excel(fpath, sheet_name='高掉话小区闭环管理反馈表', usecols=['省份', 'CGI', '话务量', '掉话率'])
         ESRVCCQHC = pd.read_excel(fpath, sheet_name='低SRVCC无线切换成功率小区闭环管理反馈表',
@@ -127,8 +127,7 @@ def getBackTablekpi(fpath):
         VOLTEXXGDB = pd.read_excel(fpath, sheet_name='下行高丢包小区闭环管理反馈表', usecols=['省份', 'CGI', '下行平均丢包率'])
         VOLTESXGTZ = pd.read_excel(fpath, sheet_name='上行高吞字小区反馈表', usecols=['省份', '小区cgi', '上行高吞字采样点占比'])
         VOLTEXXGTZ = pd.read_excel(fpath, sheet_name='下行高吞字小区反馈表', usecols=['省份', '小区cgi', '下行高吞字采样点占比'])
-
-        #######
+        ##
         df_VOLTEJTD = pd.read_excel(fpath, sheet_name='低接入小区明细参考表', usecols=['省份', '日期'])
         df_VOLTESXGDB = pd.read_excel(fpath, sheet_name='上行高丢包小区明细参考表', usecols=['省份', '日期'])
         df_VOLTEJTD = chooseProvince(df_VOLTEJTD)
@@ -145,7 +144,7 @@ def getBackTablekpi(fpath):
 
         cc, dd = getProblemDate(df_VOLTESXGDB)
 
-        #####筛选广东省两高两低小区
+        ##筛选广东省两高两低小区
         VOLTEJTD = chooseProvince(VOLTEJTD)
         VOLTERABDXG = chooseProvince(VOLTERABDXG)
         ESRVCCQHC = chooseProvince(ESRVCCQHC)
@@ -186,8 +185,7 @@ def getBackTablekpi(fpath):
         write_csv(context)
     return riqi, result
 
-
-####生成最终的集团“两高两低”反馈表
+##生成最终的集团“两高两低”反馈表
 def getFinalBackTable(result, eptable):
     eptable.columns = ['cgi', 'city']
     eptable = eptable.drop_duplicates('cgi')
@@ -203,15 +201,14 @@ def getFinalBackTable(result, eptable):
     write_csv(context)
     return result
 
-
 if __name__ == "__main__":
     path = r'D:/集团工单/gd'  # 指定存放文件的地址
     path2 = r'D:/集团工单'
     # path = r'/data/ftp/python/xls'  # 指定存放文件的地址
     # path2 = r'/data/ftp/python/fcsv'  # 指定存放结果文件
-    ####获取目标文件名
+    ##获取目标文件名
     b = getFileName(path)
-    #####获取目标文件路径
+    ##获取目标文件路径
     fpath = path + '/' + b
 
     riqi, result = getBackTablekpi(fpath)
@@ -224,8 +221,8 @@ if __name__ == "__main__":
     eptable = getPublicParameter()
     Result = getFinalBackTable(result, eptable)
 
-    dateIntoPostgresql(Result, "volte.vn_gdcellkpi_group")
-    dateIntoPostgresql(riqi, "volte.vn_gd_group_date")
+    # dateIntoPostgresql(Result, "volte.vn_gdcellkpi_group")
+    # dateIntoPostgresql(riqi, "volte.vn_gd_group_date")
     riqi.to_csv(path2 + "/riqi.csv", header=1, encoding='gbk', index=False)  # 保存列名存储
     Result.to_csv(path2 + "/back.csv", header=1, encoding='gbk', index=False)  # 保存列名存储
     print("任务执行完成")

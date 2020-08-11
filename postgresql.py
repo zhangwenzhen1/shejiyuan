@@ -13,11 +13,11 @@ class Postgresql(object):
         :param host: 地址
         :param port: 端口
         '''
-        self.database = '**'
-        self.user = '**'
-        self.password = '**'
-        self.host = '**'
-        self.port = '**'
+        self.database = 'db'
+        self.user = 'postgres_user'
+        self.password = 'postgres_password'
+        self.host = '10.10.10.109'
+        self.port = '5432'
         self.conn = psycopg2.connect(database=self.database, user=self.user, password=self.password, host=self.host,
                                      port=self.port)
 
@@ -72,15 +72,15 @@ if __name__ == "__main__":
     # sql ="SELECT * from volte.userinfor where s_date <'2020-06-11 00:00:00' "
     # sql = "SELECT cgi,state,cityname,districtandcounty,vendor FROM volte.v_eptable"
 
-    sql1 = "SELECT max(cast(replace(vcauxiliarypointer6,'JT','') as bigint)) as suoyin FROM volte.v_volte_send where vcauxiliarypointer6 like 'JT%' "
-    # sql2 ="SELECT * FROM volte.vn_xdrresultscore xdr LEFT JOIN volte.vn_complain_reason reason ON xdr.request_no = reason.request_no WHERE TO_CHAR(xdr.accept_time, 'yyyy-MM-dd') = '2020-07-27'"
-    date = a.GetData(sql1)
+    # sql1 = "SELECT max(cast(replace(vcauxiliarypointer6,'JT','') as bigint)) as suoyin FROM volte.v_volte_send where vcauxiliarypointer6 like 'JT%' "
+    sql2 ="SELECT * FROM volte.vn_xdrresultscore xdr LEFT JOIN volte.vn_complain_reason reason ON xdr.request_no = reason.request_no WHERE TO_CHAR(xdr.accept_time, 'yyyy-MM-dd') = '2020-07-27'"
+    date = a.GetData(sql2)
     
-    print('suoy'+str(date.iat[0,0]))
-    # date = date.drop_duplicates('request_no')
-    # print(date.iloc[:, 0].size)
+    # print('suoy'+str(date.iat[0,0]))
+    date = date.drop_duplicates('request_no')
+    print(date.iloc[:, 0].size)
     # date = pd.DataFrame(date)
     # date.columns = ['CGI', 'state', 'vcauxiliarypointer1', 'vcauxiliarypointer2', 'vcauxiliarypointer3']
     # print(date.head())
-    # date.to_csv('D:\集团工单/USETOUSU.csv', index= False,encoding='gbk')
+    date.to_csv('D:\集团工单/USETOUSU1.csv', index= False,encoding='gbk')
     a.finish()

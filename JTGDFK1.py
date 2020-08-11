@@ -15,7 +15,7 @@ def connectionPosgresql():
         # conn = psycopg2.connect(database="db", user="postgres_user", password="postgres_password", host="10.10.10.109",
         #                         port="5432")
         conn = psycopg2.connect(database="db", user="cmdi_volte", password="Cmdi@2O19", host="192.169.5.142",
-                                port="35005")
+                                port="5432")
     except Exception as e:
         print(e)
         context = e

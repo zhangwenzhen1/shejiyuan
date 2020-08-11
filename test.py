@@ -155,5 +155,4 @@ df = pd.read_csv('D:\集团工单/back.csv', encoding='gbk')
 print(df.columns)
 c='voltetraval','volteradconnratio'
 b = jisuan(df,c,['city','startdate'])
-print(b)
-
+print(b.head())
